@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine 💞</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #ff9a9e, #fad0c4);
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 28px 32px 32px;
+      width: 92%;
+      max-width: 420px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .score {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-size: 14px;
+      color: #ff4d6d;
+      font-weight: 500;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      color: #ff4d6d;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    input, button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: none;
+      margin-top: 12px;
+    }
+
+    input { background: #f5f5f5; }
+
+    button {
+      background: linear-gradient(135deg, #ff4d6d, #ff758c);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .options button {
+      background: #fff;
+      color: #ff4d6d;
+      border: 2px solid #ffdde1;
+    }
+
+    .error {
+      background: #ffe3e3;
+      color: #c9184a;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 16px;
+      margin-top: 16px;
+    }
+
+    .success {
+      margin-top: 12px;
+      text-align: center;
+      color: #ff4d6d;
+      font-weight: 500;
+    }
+
+    .valentine-buttons {
+      position: relative;
+      height: 120px;
+      margin-top: 25px;
+    }
+
+    #yesBtn { position: absolute; right: 0; bottom: 0; }
+    #noBtn {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      background: #ddd;
+      color: #444;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <div class="score" id="score">1 / 5</div>
+
+  <!-- STEP 1 -->
+  <div class="step active">
+    <h2>When did we get committed? 💘</h2>
+    <input type="date" id="commitDate">
+    <button onclick="checkDate()">Continue</button>
+    <div id="dateError" class="error" style="display:none;">That’s not the date ❤️</div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <h2>First gift 🎁</h2>
+    <div class="options">
+      <button onclick="checkGift('Jason')">Jason</button>
+      <button onclick="checkGift('Teddy')">Teddy</button>
+      <button onclick="checkGift('Watch')">Watch</button>
+      <button onclick="checkGift('Nothing')">Nothing</button>
+    </div>
+    <div id="giftError" class="error" style="display:none;">You should know this 😉</div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <h2>Where do you want to travel? ✈️</h2>
+    <input type="text" id="travelPlace" placeholder="Tell me a place">
+    <button onclick="saveTravel()">Save</button>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <h2>Where did we click this photo? 📸</h2>
+    <img src="Image.png" alt="Our memory">
+    <input type="text" id="photoPlace" placeholder="Tell me where">
+    <button onclick="savePhotoPlace()">Save</button>
+    <div id="notedText" class="success"></div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step">
+    <h2>Will you be my Valentine 💞?</h2>
+    <div class="valentine-buttons">
+      <button id="yesBtn" onclick="finalYes()">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentStep = 0;
+  const steps = document.querySelectorAll('.step');
+  const scoreEl = document.getElementById('score');
+
+  function updateScore() {
+    scoreEl.innerText = `${currentStep + 1} / 5`;
+  }
+
+  function nextStep() {
+    steps[currentStep].classList.remove('active');
+    currentStep++;
+    steps[currentStep].classList.add('active');
+    updateScore();
+  }
+
+  function checkDate() {
+    if (document.getElementById('commitDate').value === '2025-04-03') {
+      document.getElementById('dateError').style.display = 'none';
+      nextStep();
+    } else {
+      document.getElementById('dateError').style.display = 'block';
+    }
+  }
+
+  function checkGift(g) {
+    if (g === 'Jason') {
+      document.getElementById('giftError').style.display = 'none';
+      nextStep();
+    } else {
+      document.getElementById('giftError').style.display = 'block';
+    }
+  }
+
+  function saveTravel() {
+    const val = document.getElementById('travelPlace').value.trim();
+    if (!val) return;
+    localStorage.setItem('travelPlace', val);
+    nextStep();
+  }
+
+  function savePhotoPlace() {
+    const val = document.getElementById('photoPlace').value.trim();
+    if (!val) return;
+    localStorage.setItem('photoPlace', val);
+    document.getElementById('notedText').innerText = "Noted gorgeous 💖";
+    setTimeout(nextStep, 1200);
+  }
+
+  function finalYes() {
+    const travel = localStorage.getItem('travelPlace');
+    const photo = localStorage.getItem('photoPlace');
+
+    const subject = encodeURIComponent("Little things about us 💕");
+    const body = encodeURIComponent(
+      `Travel destination: ${travel}\nPhoto clicked at: ${photo}`
+    );
+
+    window.open(
+      `mailto:gajendralenovo@gmail.com?subject=${subject}&body=${body}`,
+      '_blank'
+    );
+  }
+
+  const noBtn = document.getElementById('noBtn');
+  noBtn.addEventListener('mouseenter', () => {
+    noBtn.style.transform =
+      `translate(${Math.random()*200}px, ${Math.random()*80}px)`;
+  });
+</script>
+
+</body>
+</html>
